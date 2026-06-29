@@ -23,6 +23,12 @@ This submission focuses on prompt 2: clinical decision making and pattern recogn
 
 ## POC Demo
 
+Live demo:
+
+`https://mnikoopayan.github.io/cotiviti-prompt2-claim-integrity-radar/claim-integrity-radar-poc/`
+
+Local demo:
+
 Open:
 
 `claim-integrity-radar-poc/index.html`
