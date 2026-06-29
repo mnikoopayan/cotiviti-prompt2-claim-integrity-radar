@@ -1,0 +1,1289 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Claim Integrity Radar</title>
+  <style>
+    :root {
+      --bg: #f7f8fa;
+      --panel: #ffffff;
+      --ink: #101820;
+      --muted: #5f6975;
+      --line: #d9dee5;
+      --soft: #eef1f5;
+      --teal: #0f766e;
+      --teal-soft: #d9f0ec;
+      --amber: #c56a00;
+      --amber-soft: #fff0d6;
+      --red: #b42318;
+      --red-soft: #fde1df;
+      --blue: #255b9b;
+      --blue-soft: #e5edf7;
+      --green: #2d7a3e;
+      --radius: 8px;
+      --shadow: 0 16px 35px rgba(16, 24, 32, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.45;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+
+    .topbar {
+      background: var(--panel);
+      border-bottom: 1px solid var(--line);
+      padding: 18px 24px 16px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      align-items: end;
+    }
+
+    .eyebrow {
+      color: var(--teal);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 28px;
+      line-height: 1.12;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      max-width: 920px;
+      color: var(--muted);
+      margin: 7px 0 0;
+      font-size: 14px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--ink);
+      border-radius: var(--radius);
+      padding: 9px 12px;
+      cursor: pointer;
+      min-height: 40px;
+      transition: 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .btn:hover {
+      border-color: #aeb8c3;
+      transform: translateY(-1px);
+    }
+
+    .btn.primary {
+      background: var(--ink);
+      color: #fff;
+      border-color: var(--ink);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 18px;
+      padding: 18px;
+      max-width: 1480px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .sidebar {
+      padding: 18px;
+      align-self: start;
+      position: sticky;
+      top: 18px;
+    }
+
+    .panel h2 {
+      margin: 0 0 12px;
+      font-size: 16px;
+      line-height: 1.2;
+    }
+
+    .field {
+      margin-bottom: 16px;
+    }
+
+    .field label {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 7px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    select,
+    input[type="range"] {
+      width: 100%;
+    }
+
+    select {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      padding: 9px 10px;
+      color: var(--ink);
+    }
+
+    .threshold-value {
+      display: flex;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 6px;
+    }
+
+    .toggle {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      color: var(--ink);
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    .toggle input {
+      width: 18px;
+      height: 18px;
+    }
+
+    .sidebar-note {
+      border-top: 1px solid var(--line);
+      padding-top: 14px;
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .main {
+      display: grid;
+      gap: 18px;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(130px, 1fr));
+      gap: 12px;
+    }
+
+    .metric {
+      padding: 16px;
+      min-height: 110px;
+    }
+
+    .metric-label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .metric-value {
+      font-size: 32px;
+      font-weight: 850;
+      margin-top: 8px;
+      line-height: 1;
+    }
+
+    .metric-foot {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 8px;
+    }
+
+    .workbench {
+      display: grid;
+      grid-template-columns: minmax(360px, 1.05fr) minmax(380px, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .graph-panel,
+    .detail-panel,
+    .queue-panel,
+    .federated-panel {
+      padding: 18px;
+    }
+
+    .panel-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .panel-heading p {
+      margin: 3px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .status-pill {
+      border-radius: 999px;
+      padding: 5px 9px;
+      background: var(--soft);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .status-pill.ready {
+      background: var(--teal-soft);
+      color: var(--teal);
+    }
+
+    .graph-shell {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fbfcfd;
+      overflow: hidden;
+      min-height: 430px;
+    }
+
+    svg {
+      display: block;
+      width: 100%;
+      height: 430px;
+    }
+
+    .node circle {
+      stroke: #fff;
+      stroke-width: 4;
+      filter: drop-shadow(0 4px 8px rgba(16, 24, 32, 0.18));
+    }
+
+    .node text {
+      font-size: 12px;
+      fill: var(--ink);
+      font-weight: 800;
+      text-anchor: middle;
+      pointer-events: none;
+    }
+
+    .edge {
+      stroke: #9aa5b1;
+      stroke-width: 2;
+      fill: none;
+    }
+
+    .edge.hot {
+      stroke: var(--red);
+      stroke-width: 3;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .fact {
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: var(--radius);
+      padding: 10px;
+      min-height: 70px;
+    }
+
+    .fact b {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .fact span {
+      font-weight: 800;
+      font-size: 18px;
+    }
+
+    .evidence {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .evidence li {
+      display: grid;
+      grid-template-columns: 24px 1fr;
+      gap: 8px;
+      align-items: start;
+      padding: 10px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      font-size: 14px;
+    }
+
+    .step-num {
+      background: var(--ink);
+      color: #fff;
+      width: 24px;
+      height: 24px;
+      border-radius: 999px;
+      display: inline-grid;
+      place-items: center;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .queue-and-fed {
+      display: grid;
+      grid-template-columns: minmax(360px, 1fr) minmax(360px, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .queue-list {
+      display: grid;
+      gap: 8px;
+      max-height: 460px;
+      overflow: auto;
+      padding-right: 4px;
+    }
+
+    .case-card {
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: var(--radius);
+      padding: 11px;
+      display: grid;
+      grid-template-columns: 72px 1fr auto;
+      gap: 12px;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .case-card.active {
+      border-color: var(--ink);
+      box-shadow: inset 4px 0 0 var(--ink);
+    }
+
+    .score {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      color: #fff;
+    }
+
+    .score.red {
+      background: var(--red);
+    }
+
+    .score.amber {
+      background: var(--amber);
+    }
+
+    .score.green {
+      background: var(--green);
+    }
+
+    .case-title {
+      font-weight: 850;
+    }
+
+    .case-meta,
+    .case-reason {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .case-reason {
+      margin-top: 3px;
+    }
+
+    .tag {
+      border-radius: 999px;
+      padding: 5px 8px;
+      font-size: 12px;
+      font-weight: 800;
+      background: var(--soft);
+      color: var(--muted);
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .tag.red {
+      background: var(--red-soft);
+      color: var(--red);
+    }
+
+    .tag.amber {
+      background: var(--amber-soft);
+      color: var(--amber);
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .flow-step {
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: var(--radius);
+      padding: 10px;
+      min-height: 98px;
+    }
+
+    .flow-step b {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .flow-step span {
+      font-weight: 780;
+      font-size: 14px;
+    }
+
+    .mini-bars {
+      display: grid;
+      gap: 9px;
+    }
+
+    .bar-row {
+      display: grid;
+      grid-template-columns: 98px 1fr 50px;
+      gap: 10px;
+      align-items: center;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .bar-track {
+      height: 11px;
+      border-radius: 999px;
+      background: var(--soft);
+      overflow: hidden;
+    }
+
+    .bar {
+      height: 100%;
+      background: var(--teal);
+      width: 10%;
+      transition: width 0.25s ease;
+    }
+
+    .bar.amber {
+      background: var(--amber);
+    }
+
+    .bar.red {
+      background: var(--red);
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 18px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      opacity: 0;
+      background: var(--ink);
+      color: #fff;
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      box-shadow: var(--shadow);
+      transition: 0.2s ease;
+      z-index: 10;
+      max-width: min(560px, calc(100vw - 24px));
+      text-align: center;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    @media (max-width: 1100px) {
+      .layout,
+      .workbench,
+      .queue-and-fed {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: static;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .topbar {
+        grid-template-columns: 1fr;
+      }
+
+      .actions {
+        justify-content: flex-start;
+      }
+
+      .metrics,
+      .detail-grid,
+      .flow {
+        grid-template-columns: 1fr;
+      }
+
+      .case-card {
+        grid-template-columns: 62px 1fr;
+      }
+
+      .case-card .tag {
+        grid-column: 1 / -1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div>
+        <div class="eyebrow">Prompt 2 POC | Payment integrity graph intelligence</div>
+        <h1>Claim Integrity Radar</h1>
+        <p class="subtitle">A synthetic claims graph demonstrator that trains local payer baselines, shares only aggregate peer signal, and turns anomaly scores into an auditor-ready evidence chain.</p>
+      </div>
+      <div class="actions" aria-label="Demo actions">
+        <button class="btn" id="regenerateBtn">Generate New Run</button>
+        <button class="btn" id="trainBtn">Train Local Baselines</button>
+        <button class="btn" id="federateBtn">Share Federated Summary</button>
+        <button class="btn primary" id="exportBtn">Export Audit Packet</button>
+      </div>
+    </header>
+
+    <section class="layout">
+      <aside class="panel sidebar">
+        <h2>Review Controls</h2>
+        <div class="field">
+          <label for="clientSelect">Client view</label>
+          <select id="clientSelect">
+            <option value="All">All simulated clients</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="domainSelect">Clinical domain</label>
+          <select id="domainSelect">
+            <option value="All">All domains</option>
+            <option value="Wound care">Wound care</option>
+            <option value="DME">DME</option>
+            <option value="Lab">Lab</option>
+            <option value="Behavioral health">Behavioral health</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="thresholdInput">Risk threshold</label>
+          <input id="thresholdInput" type="range" min="40" max="95" value="70">
+          <div class="threshold-value"><span>40</span><b id="thresholdValue">70</b><span>95</span></div>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="graphToggle" checked>
+          <span>Show graph evidence</span>
+        </label>
+        <label class="toggle">
+          <input type="checkbox" id="privacyToggle" checked>
+          <span>Suppress raw member identifiers in federated view</span>
+        </label>
+        <p class="sidebar-note">The demo uses synthetic data only. Scores are explainable heuristics, designed to make first principles visible during a short presentation.</p>
+      </aside>
+
+      <section class="main">
+        <div class="metrics">
+          <article class="panel metric">
+            <div class="metric-label">Claims scanned</div>
+            <div class="metric-value" id="metricClaims">0</div>
+            <div class="metric-foot">Synthetic claims in current filter</div>
+          </article>
+          <article class="panel metric">
+            <div class="metric-label">Flagged claims</div>
+            <div class="metric-value" id="metricFlagged">0</div>
+            <div class="metric-foot">At or above threshold</div>
+          </article>
+          <article class="panel metric">
+            <div class="metric-label">Raw records shared</div>
+            <div class="metric-value" id="metricShared">0</div>
+            <div class="metric-foot">Federated summary keeps PHI local</div>
+          </article>
+          <article class="panel metric">
+            <div class="metric-label">Top risk score</div>
+            <div class="metric-value" id="metricTop">0</div>
+            <div class="metric-foot" id="metricTopFoot">No claim selected</div>
+          </article>
+        </div>
+
+        <div class="workbench">
+          <article class="panel graph-panel">
+            <div class="panel-heading">
+              <div>
+                <h2>Selected Claim Graph</h2>
+                <p>Edges connect the claim to provider, member, procedure, diagnosis, peer group, and policy cue.</p>
+              </div>
+              <span class="status-pill" id="graphStatus">Synthetic</span>
+            </div>
+            <div class="graph-shell">
+              <svg id="claimGraph" viewBox="0 0 720 430" role="img" aria-label="Claim graph visualization"></svg>
+            </div>
+          </article>
+
+          <article class="panel detail-panel">
+            <div class="panel-heading">
+              <div>
+                <h2>Evidence Chain</h2>
+                <p>Each score is translated into a short investigator handoff.</p>
+              </div>
+              <span class="status-pill ready" id="actionStatus">Review</span>
+            </div>
+            <div class="detail-grid">
+              <div class="fact"><b>Claim</b><span id="detailClaim">-</span></div>
+              <div class="fact"><b>Provider</b><span id="detailProvider">-</span></div>
+              <div class="fact"><b>Procedure</b><span id="detailProcedure">-</span></div>
+              <div class="fact"><b>Recommended action</b><span id="detailAction">-</span></div>
+            </div>
+            <ol class="evidence" id="evidenceList"></ol>
+          </article>
+        </div>
+
+        <div class="queue-and-fed">
+          <article class="panel queue-panel">
+            <div class="panel-heading">
+              <div>
+                <h2>Review Queue</h2>
+                <p>Click a claim to inspect its graph and reason trace.</p>
+              </div>
+              <span class="status-pill" id="queueStatus">Threshold 70</span>
+            </div>
+            <div class="queue-list" id="queueList"></div>
+          </article>
+
+          <article class="panel federated-panel">
+            <div class="panel-heading">
+              <div>
+                <h2>Federated Signal Exchange</h2>
+                <p>Clients keep raw claims local and share only approved summary features.</p>
+              </div>
+              <span class="status-pill" id="fedStatus">Not shared</span>
+            </div>
+            <div class="flow">
+              <div class="flow-step"><b>1. Local</b><span>Train baselines by client, code, provider specialty, and week.</span></div>
+              <div class="flow-step"><b>2. Summarize</b><span>Convert raw claims into means, percentiles, and drift signals.</span></div>
+              <div class="flow-step"><b>3. Combine</b><span>Merge aggregate peer signal across simulated clients.</span></div>
+              <div class="flow-step"><b>4. Explain</b><span>Return graph paths and actions, not opaque alerts.</span></div>
+            </div>
+            <div class="mini-bars" id="federatedBars"></div>
+          </article>
+        </div>
+      </section>
+    </section>
+  </main>
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const clients = ["Apex Health", "BridgeCare", "Canyon Mutual"];
+    const domains = ["Wound care", "DME", "Lab", "Behavioral health"];
+    const cptCatalog = {
+      "Wound care": [
+        { code: "97605", label: "Negative pressure wound therapy", base: 310, dx: ["L97", "T81"] },
+        { code: "11042", label: "Debridement", base: 210, dx: ["L97", "T81"] }
+      ],
+      "DME": [
+        { code: "E1390", label: "Oxygen concentrator", base: 145, dx: ["J44", "R09"] },
+        { code: "K0001", label: "Standard wheelchair", base: 95, dx: ["M62", "G82"] }
+      ],
+      "Lab": [
+        { code: "87502", label: "Influenza PCR", base: 118, dx: ["J10", "R50"] },
+        { code: "80053", label: "Metabolic panel", base: 38, dx: ["E11", "I10"] }
+      ],
+      "Behavioral health": [
+        { code: "90837", label: "Psychotherapy, 60 minutes", base: 150, dx: ["F32", "F41"] },
+        { code: "96130", label: "Psychological testing", base: 185, dx: ["F90", "F84"] }
+      ]
+    };
+    const specialties = {
+      "Wound care": ["Wound Clinic", "Surgery Group"],
+      "DME": ["DME Supplier", "Pulmonary DME"],
+      "Lab": ["Reference Lab", "Community Lab"],
+      "Behavioral health": ["Behavioral Health", "Psychology Group"]
+    };
+    const mismatchDx = ["R69", "Z00", "M54", "N39"];
+
+    let seed = 42;
+    let claims = [];
+    let baselines = {};
+    let selectedClaimId = null;
+    let trained = false;
+    let federated = false;
+
+    const els = {
+      clientSelect: document.getElementById("clientSelect"),
+      domainSelect: document.getElementById("domainSelect"),
+      thresholdInput: document.getElementById("thresholdInput"),
+      thresholdValue: document.getElementById("thresholdValue"),
+      graphToggle: document.getElementById("graphToggle"),
+      privacyToggle: document.getElementById("privacyToggle"),
+      metricClaims: document.getElementById("metricClaims"),
+      metricFlagged: document.getElementById("metricFlagged"),
+      metricShared: document.getElementById("metricShared"),
+      metricTop: document.getElementById("metricTop"),
+      metricTopFoot: document.getElementById("metricTopFoot"),
+      queueList: document.getElementById("queueList"),
+      queueStatus: document.getElementById("queueStatus"),
+      graph: document.getElementById("claimGraph"),
+      graphStatus: document.getElementById("graphStatus"),
+      actionStatus: document.getElementById("actionStatus"),
+      detailClaim: document.getElementById("detailClaim"),
+      detailProvider: document.getElementById("detailProvider"),
+      detailProcedure: document.getElementById("detailProcedure"),
+      detailAction: document.getElementById("detailAction"),
+      evidenceList: document.getElementById("evidenceList"),
+      federatedBars: document.getElementById("federatedBars"),
+      fedStatus: document.getElementById("fedStatus"),
+      toast: document.getElementById("toast"),
+      regenerateBtn: document.getElementById("regenerateBtn"),
+      trainBtn: document.getElementById("trainBtn"),
+      federateBtn: document.getElementById("federateBtn"),
+      exportBtn: document.getElementById("exportBtn")
+    };
+
+    function rand() {
+      seed = (seed * 1664525 + 1013904223) % 4294967296;
+      return seed / 4294967296;
+    }
+
+    function pick(items) {
+      return items[Math.floor(rand() * items.length)];
+    }
+
+    function clamp(value, min, max) {
+      return Math.max(min, Math.min(max, value));
+    }
+
+    function money(value) {
+      return "$" + Math.round(value).toLocaleString();
+    }
+
+    function buildClaims() {
+      const providers = [];
+      let providerIndex = 1;
+      for (const domain of domains) {
+        for (let i = 0; i < 8; i += 1) {
+          providers.push({
+            id: "P-" + String(providerIndex).padStart(2, "0"),
+            name: pick(["North", "Summit", "Clearview", "Harbor", "Valley", "Cedar"]) + " " + pick(specialties[domain]),
+            domain,
+            specialty: pick(specialties[domain]),
+            anomalyProfile: providerIndex === 7 ? "wound-unit-spike" : providerIndex === 17 ? "lab-burst" : providerIndex === 24 ? "dme-shared" : "normal"
+          });
+          providerIndex += 1;
+        }
+      }
+
+      const members = Array.from({ length: 90 }, (_, i) => ({
+        id: "M-" + String(i + 1).padStart(3, "0"),
+        ageBand: pick(["18-34", "35-49", "50-64", "65+"]),
+        region: pick(["Urban", "Suburban", "Rural"])
+      }));
+
+      const out = [];
+      let claimIndex = 1001;
+      for (let i = 0; i < 420; i += 1) {
+        const provider = pick(providers);
+        const domain = provider.domain;
+        const procedure = pick(cptCatalog[domain]);
+        const client = pick(clients);
+        const week = 1 + Math.floor(rand() * 16);
+        const member = provider.anomalyProfile === "dme-shared" && rand() > 0.55 ? members[4 + Math.floor(rand() * 6)] : pick(members);
+        const normalUnits = domain === "Behavioral health" ? 1 : 1 + (rand() > 0.82 ? 1 : 0);
+        let units = normalUnits;
+        let amount = procedure.base * units * (0.8 + rand() * 0.45);
+        let dx = pick(procedure.dx) + "." + Math.floor(rand() * 10);
+        let modifier = rand() > 0.86 ? "59" : "None";
+
+        if (provider.anomalyProfile === "wound-unit-spike" && procedure.code === "97605" && rand() > 0.28) {
+          units = 4 + Math.floor(rand() * 3);
+          amount = procedure.base * units * (1.35 + rand() * 0.5);
+          dx = rand() > 0.45 ? pick(mismatchDx) + "." + Math.floor(rand() * 10) : "L97." + Math.floor(rand() * 10);
+          modifier = "59";
+        }
+        if (provider.anomalyProfile === "lab-burst" && procedure.code === "87502" && week > 9) {
+          units = 3 + Math.floor(rand() * 2);
+          amount = procedure.base * units * (1.3 + rand() * 0.35);
+        }
+        if (provider.anomalyProfile === "dme-shared" && domain === "DME" && rand() > 0.35) {
+          units = 2 + Math.floor(rand() * 2);
+          amount = procedure.base * units * (1.6 + rand() * 0.45);
+          dx = rand() > 0.5 ? pick(mismatchDx) + "." + Math.floor(rand() * 10) : dx;
+        }
+
+        out.push({
+          id: "C-" + claimIndex,
+          client,
+          providerId: provider.id,
+          providerName: provider.name,
+          specialty: provider.specialty,
+          memberId: member.id,
+          memberMask: "Member " + member.ageBand + " | " + member.region,
+          domain,
+          code: procedure.code,
+          procedure: procedure.label,
+          expectedDx: procedure.dx,
+          dx,
+          week,
+          units,
+          amount,
+          modifier,
+          risk: 0,
+          reasons: [],
+          action: "Monitor"
+        });
+        claimIndex += 1;
+      }
+      return out;
+    }
+
+    function trainBaselines() {
+      const grouped = {};
+      for (const c of claims) {
+        const key = [c.client, c.domain, c.specialty, c.code].join("|");
+        if (!grouped[key]) grouped[key] = [];
+        grouped[key].push(c.amount / Math.max(1, c.units));
+      }
+      baselines = {};
+      for (const key of Object.keys(grouped)) {
+        const values = grouped[key].sort((a, b) => a - b);
+        const avg = values.reduce((a, b) => a + b, 0) / values.length;
+        const p80 = values[Math.floor(values.length * 0.8)] || avg;
+        baselines[key] = { avg, p80, n: values.length };
+      }
+      trained = true;
+      scoreAll();
+    }
+
+    function getBaseline(claim) {
+      const key = [claim.client, claim.domain, claim.specialty, claim.code].join("|");
+      const local = baselines[key];
+      if (local) return local;
+      return { avg: claim.amount / Math.max(1, claim.units), p80: claim.amount, n: 1 };
+    }
+
+    function providerBurst(claim) {
+      const same = claims.filter(c => c.providerId === claim.providerId && c.code === claim.code);
+      const current = same.filter(c => c.week >= Math.max(1, claim.week - 1) && c.week <= claim.week + 1).length;
+      const prior = same.filter(c => c.week < claim.week - 1).length;
+      const expected = Math.max(2, prior / Math.max(1, claim.week - 2));
+      return current / expected;
+    }
+
+    function sharedMemberPressure(claim) {
+      const sameMember = claims.filter(c => c.memberId === claim.memberId && c.code === claim.code && Math.abs(c.week - claim.week) <= 2);
+      const uniqueProviders = new Set(sameMember.map(c => c.providerId));
+      return uniqueProviders.size;
+    }
+
+    function scoreClaim(claim) {
+      const baseline = getBaseline(claim);
+      const perUnit = claim.amount / Math.max(1, claim.units);
+      const peerRatio = perUnit / Math.max(1, baseline.p80);
+      const burst = providerBurst(claim);
+      const shared = sharedMemberPressure(claim);
+      const dxRoot = claim.dx.split(".")[0];
+      const dxMismatch = !claim.expectedDx.includes(dxRoot);
+      const reasons = [];
+      let score = 22;
+
+      if (peerRatio > 1.15) {
+        const points = Math.min(32, Math.round((peerRatio - 1) * 36));
+        score += points;
+        reasons.push("Peer outlier: paid amount per unit is " + peerRatio.toFixed(1) + "x the local 80th percentile for this code and specialty.");
+      }
+      if (claim.units >= 3) {
+        score += Math.min(30, claim.units * 6);
+        reasons.push("Unit anomaly: " + claim.units + " units billed where the peer norm is close to 1 to 2.");
+      }
+      if (dxMismatch) {
+        score += 22;
+        reasons.push("Clinical mismatch: diagnosis " + claim.dx + " is weakly aligned to procedure " + claim.code + ".");
+      }
+      if (burst > 2.2) {
+        score += 18;
+        reasons.push("Time-series burst: provider volume for this code is " + burst.toFixed(1) + "x recent baseline.");
+      }
+      if (shared > 1) {
+        score += 14 + shared;
+        reasons.push("Graph pattern: the same masked member appears with " + shared + " providers for this procedure in a short window.");
+      }
+      if (claim.modifier === "59") {
+        score += 9;
+        reasons.push("Modifier cue: modifier 59 is present and should be checked against documentation.");
+      }
+      if (!reasons.length) {
+        reasons.push("No major exception found. Keep in monitoring cohort.");
+      }
+
+      score = clamp(score, 0, 99);
+      let action = "Monitor";
+      if (score >= 86) action = "Prepay clinical review";
+      else if (score >= 72) action = "Record request";
+      else if (score >= 58) action = "Provider education";
+
+      return { score, reasons, action, peerRatio, burst, shared };
+    }
+
+    function scoreAll() {
+      for (const claim of claims) {
+        const result = scoreClaim(claim);
+        claim.risk = result.score;
+        claim.reasons = result.reasons;
+        claim.action = result.action;
+        claim.peerRatio = result.peerRatio;
+        claim.burst = result.burst;
+        claim.shared = result.shared;
+      }
+    }
+
+    function filteredClaims() {
+      const client = els.clientSelect.value;
+      const domain = els.domainSelect.value;
+      return claims.filter(c => (client === "All" || c.client === client) && (domain === "All" || c.domain === domain));
+    }
+
+    function selectedOrTop(flagged) {
+      if (selectedClaimId) {
+        const found = claims.find(c => c.id === selectedClaimId);
+        if (found) return found;
+      }
+      return flagged[0] || filteredClaims().sort((a, b) => b.risk - a.risk)[0];
+    }
+
+    function riskClass(score) {
+      if (score >= 82) return "red";
+      if (score >= 65) return "amber";
+      return "green";
+    }
+
+    function renderMetrics(all, flagged) {
+      const top = all.slice().sort((a, b) => b.risk - a.risk)[0];
+      els.metricClaims.textContent = all.length.toLocaleString();
+      els.metricFlagged.textContent = flagged.length.toLocaleString();
+      els.metricShared.textContent = federated ? "0" : "0";
+      els.metricTop.textContent = top ? top.risk : "0";
+      els.metricTopFoot.textContent = top ? top.id + " | " + top.domain : "No claim selected";
+      els.queueStatus.textContent = "Threshold " + els.thresholdInput.value;
+    }
+
+    function renderQueue(flagged) {
+      els.queueList.innerHTML = "";
+      if (!flagged.length) {
+        const empty = document.createElement("div");
+        empty.className = "case-card";
+        empty.innerHTML = "<div class=\"score green\">0</div><div><div class=\"case-title\">No claims above threshold</div><div class=\"case-meta\">Lower the threshold or change filters.</div></div><span class=\"tag\">Clear</span>";
+        els.queueList.appendChild(empty);
+        return;
+      }
+      for (const claim of flagged.slice(0, 24)) {
+        const card = document.createElement("button");
+        card.type = "button";
+        card.className = "case-card" + (claim.id === selectedClaimId ? " active" : "");
+        card.innerHTML = [
+          "<div class=\"score " + riskClass(claim.risk) + "\">" + claim.risk + "</div>",
+          "<div><div class=\"case-title\">" + claim.id + " | " + claim.providerId + "</div>",
+          "<div class=\"case-meta\">" + claim.client + " | " + claim.domain + " | " + money(claim.amount) + "</div>",
+          "<div class=\"case-reason\">" + claim.reasons[0] + "</div></div>",
+          "<span class=\"tag " + riskClass(claim.risk) + "\">" + claim.action + "</span>"
+        ].join("");
+        card.addEventListener("click", () => {
+          selectedClaimId = claim.id;
+          render();
+        });
+        els.queueList.appendChild(card);
+      }
+    }
+
+    function renderDetails(claim) {
+      if (!claim) return;
+      els.detailClaim.textContent = claim.id + " | score " + claim.risk;
+      els.detailProvider.textContent = claim.providerId;
+      els.detailProcedure.textContent = claim.code;
+      els.detailAction.textContent = claim.action;
+      els.actionStatus.textContent = claim.action;
+      els.evidenceList.innerHTML = "";
+      const chain = [
+        "Start with " + claim.id + ": " + claim.procedure + ", " + claim.units + " units, " + money(claim.amount) + ".",
+        "Compare against local baseline for " + claim.specialty + " and CPT " + claim.code + ".",
+        ...claim.reasons,
+        "Route to action: " + claim.action + "."
+      ];
+      chain.slice(0, 6).forEach((item, index) => {
+        const li = document.createElement("li");
+        li.innerHTML = "<span class=\"step-num\">" + (index + 1) + "</span><span>" + item + "</span>";
+        els.evidenceList.appendChild(li);
+      });
+    }
+
+    function nodeColor(kind, claim) {
+      if (kind === "claim") return riskClass(claim.risk) === "red" ? "#b42318" : riskClass(claim.risk) === "amber" ? "#c56a00" : "#2d7a3e";
+      if (kind === "provider") return "#255b9b";
+      if (kind === "policy") return "#0f766e";
+      if (kind === "member") return "#4b5563";
+      return "#ffffff";
+    }
+
+    function renderGraph(claim) {
+      els.graph.innerHTML = "";
+      if (!els.graphToggle.checked || !claim) {
+        els.graph.innerHTML = "<text x=\"360\" y=\"220\" text-anchor=\"middle\" fill=\"#5f6975\" font-size=\"18\">Graph evidence hidden by control.</text>";
+        return;
+      }
+      const nodes = [
+        { id: claim.id, label: "Claim\\n" + claim.id, kind: "claim", x: 360, y: 210, r: 48 },
+        { id: claim.providerId, label: "Provider\\n" + claim.providerId, kind: "provider", x: 155, y: 110, r: 42 },
+        { id: claim.memberId, label: els.privacyToggle.checked ? "Member\\nmasked" : "Member\\n" + claim.memberId, kind: "member", x: 155, y: 310, r: 42 },
+        { id: claim.code, label: "CPT\\n" + claim.code, kind: "code", x: 360, y: 62, r: 38 },
+        { id: claim.dx, label: "DX\\n" + claim.dx, kind: "dx", x: 560, y: 110, r: 38 },
+        { id: "peer", label: "Peer\\n" + claim.peerRatio.toFixed(1) + "x", kind: "policy", x: 560, y: 310, r: 42 },
+        { id: "policy", label: "Policy\\nchain", kind: "policy", x: 360, y: 365, r: 38 }
+      ];
+      const edges = [
+        ["provider", "claim", claim.peerRatio > 1.15],
+        ["member", "claim", claim.shared > 1],
+        ["code", "claim", claim.units >= 3],
+        ["dx", "claim", claim.reasons.some(r => r.includes("Clinical mismatch"))],
+        ["peer", "claim", claim.peerRatio > 1.15],
+        ["policy", "claim", claim.risk >= 70]
+      ];
+      const map = {
+        provider: nodes[1],
+        member: nodes[2],
+        code: nodes[3],
+        dx: nodes[4],
+        peer: nodes[5],
+        policy: nodes[6],
+        claim: nodes[0]
+      };
+      for (const [from, to, hot] of edges) {
+        const a = map[from];
+        const b = map[to];
+        const path = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        path.setAttribute("x1", a.x);
+        path.setAttribute("y1", a.y);
+        path.setAttribute("x2", b.x);
+        path.setAttribute("y2", b.y);
+        path.setAttribute("class", "edge" + (hot ? " hot" : ""));
+        els.graph.appendChild(path);
+      }
+      for (const n of nodes) {
+        const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        g.setAttribute("class", "node");
+        const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        circle.setAttribute("cx", n.x);
+        circle.setAttribute("cy", n.y);
+        circle.setAttribute("r", n.r);
+        circle.setAttribute("fill", nodeColor(n.kind, claim));
+        circle.setAttribute("stroke", n.kind === "code" || n.kind === "dx" ? "#9aa5b1" : "#fff");
+        g.appendChild(circle);
+        const labelLines = n.label.split("\\n");
+        labelLines.forEach((line, index) => {
+          const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+          text.setAttribute("x", n.x);
+          text.setAttribute("y", n.y - 5 + index * 16);
+          text.setAttribute("fill", n.kind === "code" || n.kind === "dx" ? "#101820" : "#ffffff");
+          text.textContent = line;
+          g.appendChild(text);
+        });
+        els.graph.appendChild(g);
+      }
+      els.graphStatus.textContent = claim.domain;
+    }
+
+    function renderFederated(all) {
+      els.fedStatus.textContent = federated ? "Shared" : "Not shared";
+      els.fedStatus.className = "status-pill" + (federated ? " ready" : "");
+      els.federatedBars.innerHTML = "";
+      const grouped = {};
+      for (const claim of all) {
+        if (!grouped[claim.domain]) grouped[claim.domain] = [];
+        grouped[claim.domain].push(claim.risk);
+      }
+      for (const domain of domains) {
+        const values = grouped[domain] || [];
+        const avg = values.length ? values.reduce((a, b) => a + b, 0) / values.length : 0;
+        const width = Math.min(100, Math.round(avg));
+        const cls = width > 72 ? " red" : width > 58 ? " amber" : "";
+        const row = document.createElement("div");
+        row.className = "bar-row";
+        row.innerHTML = "<span>" + domain + "</span><span class=\"bar-track\"><span class=\"bar" + cls + "\" style=\"width:" + width + "%\"></span></span><b>" + Math.round(avg) + "</b>";
+        els.federatedBars.appendChild(row);
+      }
+    }
+
+    function render() {
+      if (!trained) scoreAll();
+      const all = filteredClaims();
+      const threshold = Number(els.thresholdInput.value);
+      const flagged = all.filter(c => c.risk >= threshold).sort((a, b) => b.risk - a.risk);
+      const selected = selectedOrTop(flagged);
+      selectedClaimId = selected ? selected.id : null;
+      renderMetrics(all, flagged);
+      renderQueue(flagged);
+      renderDetails(selected);
+      renderGraph(selected);
+      renderFederated(all);
+    }
+
+    function showToast(message) {
+      els.toast.textContent = message;
+      els.toast.classList.add("show");
+      window.setTimeout(() => els.toast.classList.remove("show"), 2400);
+    }
+
+    function exportAuditPacket() {
+      const selected = claims.find(c => c.id === selectedClaimId);
+      if (!selected) return;
+      const packet = {
+        exportedAt: new Date().toISOString(),
+        author: "Mohammad Saleh Nikoopayan Tak",
+        prototype: "Claim Integrity Radar",
+        claim: selected.id,
+        score: selected.risk,
+        action: selected.action,
+        evidence: selected.reasons,
+        graph: {
+          provider: selected.providerId,
+          member: els.privacyToggle.checked ? "masked" : selected.memberId,
+          procedure: selected.code,
+          diagnosis: selected.dx,
+          peerRatio: Number(selected.peerRatio.toFixed(2)),
+          burstRatio: Number(selected.burst.toFixed(2)),
+          sharedProviderCount: selected.shared
+        }
+      };
+      const blob = new Blob([JSON.stringify(packet, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = selected.id + "-audit-packet.json";
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast("Audit packet exported for " + selected.id + ".");
+    }
+
+    function initClientSelect() {
+      els.clientSelect.innerHTML = "<option value=\"All\">All simulated clients</option>";
+      for (const client of clients) {
+        const option = document.createElement("option");
+        option.value = client;
+        option.textContent = client;
+        els.clientSelect.appendChild(option);
+      }
+    }
+
+    function regenerate() {
+      seed = Math.floor(Math.random() * 900000) + 100;
+      claims = buildClaims();
+      trained = false;
+      federated = false;
+      selectedClaimId = null;
+      scoreAll();
+      render();
+      showToast("Synthetic claims regenerated.");
+    }
+
+    function bindEvents() {
+      els.regenerateBtn.addEventListener("click", regenerate);
+      els.trainBtn.addEventListener("click", () => {
+        trainBaselines();
+        render();
+        showToast("Local baselines trained by client, specialty, and procedure.");
+      });
+      els.federateBtn.addEventListener("click", () => {
+        if (!trained) trainBaselines();
+        federated = true;
+        render();
+        showToast("Federated summary shared. Raw claim and member records remain local.");
+      });
+      els.exportBtn.addEventListener("click", exportAuditPacket);
+      els.clientSelect.addEventListener("change", () => {
+        selectedClaimId = null;
+        render();
+      });
+      els.domainSelect.addEventListener("change", () => {
+        selectedClaimId = null;
+        render();
+      });
+      els.thresholdInput.addEventListener("input", () => {
+        els.thresholdValue.textContent = els.thresholdInput.value;
+        render();
+      });
+      els.graphToggle.addEventListener("change", render);
+      els.privacyToggle.addEventListener("change", render);
+    }
+
+    function boot() {
+      initClientSelect();
+      bindEvents();
+      claims = buildClaims();
+      scoreAll();
+      const top = claims.slice().sort((a, b) => b.risk - a.risk)[0];
+      selectedClaimId = top.id;
+      render();
+    }
+
+    boot();
+  </script>
+</body>
+</html>
