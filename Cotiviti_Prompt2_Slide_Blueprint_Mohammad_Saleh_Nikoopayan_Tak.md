@@ -8,7 +8,7 @@ Deck file: `Cotiviti_Prompt2_Presentation_Mohammad_Saleh_Nikoopayan_Tak.pptx`
 
 Title: Federated Claim-Graph Intelligence
 
-Subtitle: Payment integrity with privacy-preserving pattern recognition and auditor-ready evidence chains
+Subtitle: A reviewer cockpit for privacy-preserving pattern recognition and auditor-ready evidence cards
 
 Footer content:
 - Author: Mohammad Saleh Nikoopayan Tak
@@ -33,9 +33,9 @@ Output list:
 - Clustering: which providers, codes, and members form unusual groups?
 - Time-series anomaly detection: what changed suddenly?
 
-Closing line: Design principle: no score without a story.
+Closing line: Design principle: no score without a story, and no automated payment action without human review.
 
-Visual guide: Left side text explanation and outputs. Right side graph diagram with Claim in the center connected to Provider, CPT, Member, Policy, and Time.
+Visual guide: Left side text explanation and outputs. Right side graph diagram with Claim in the center connected to Provider, CPT, Member, Policy, and Time. Add a small evidence-card icon near the graph if space allows.
 
 Presenter guidance: Define the topic. Emphasize that graph intelligence adds context and reasoning to ordinary claims analytics.
 
@@ -77,7 +77,7 @@ Column 2:
 
 Column 3:
 - Managed-service trust
-- Cotiviti can package the evidence chain with specialist review, case tracking, client governance, and provider-facing defensibility.
+- Cotiviti can package evidence cards with specialist review, case tracking, client governance, and provider-facing defensibility.
 
 Closing line: Positioning: broaden learning across payers without broadening raw data exposure.
 
@@ -109,14 +109,14 @@ Presenter guidance: Show that the proposal includes operational judgment, not ju
 
 Title: Three investable moves
 
-Subtitle: The recommendation is to start narrow, prove lift, then turn the evidence chain into a reusable product layer.
+Subtitle: The recommendation is to start narrow, prove lift, then turn the evidence card into a reusable product layer.
 
 Option cards:
 - 1 | Claim-Graph Utility Layer | Create reusable entities, edges, graph features, and explainers for prepay and postpay analytics.
 - 2 | Cross-Payer Signal Exchange | Pilot privacy-preserving aggregate learning where raw claims remain inside each client boundary.
-- 3 | Evidence Chain Product | Show graph path, peer comparison, time-series change, code-policy rationale, confidence, and next action.
+- 3 | Evidence Card Product | Show graph path, peer comparison, time-series change, code-policy rationale, confidence, model-card note, reviewer override reason, and next action.
 
-Recommendation banner: Recommended starting point: pair Option 3 with a narrow Option 2 pilot in one domain such as wound care, DME, high-volume labs, or behavioral health.
+Recommendation banner: Recommended starting point: pair Option 3 with a narrow Option 2 shadow-mode pilot in one domain such as wound care, DME, high-volume labs, or behavioral health.
 
 Visual guide: Three option cards in a row. Use colored number squares and a teal recommendation banner at the bottom.
 
@@ -132,9 +132,9 @@ Flow steps:
 - Synthetic claims | Generate payer, provider, member, CPT, diagnosis, modifier, week, units, and amount.
 - Local baselines | Train peer norms by client, domain, specialty, procedure, and week.
 - Federated summary | Share aggregate percentiles and drift signals only. Raw member records stay local.
-- Evidence queue | Score anomalies, render graph paths, and recommend an action.
+- Evidence card | Score anomalies, render graph paths, and recommend a human review action.
 
-Proof point: The demo can be shown in under three minutes, and every score has a human-readable reason trace.
+Proof point: The demo can be shown in under three minutes, and every score has a reviewer-readable evidence card.
 
 Visual guide: Four-step process flow with simple arrows. Highlight the Federated summary step in teal.
 
@@ -147,10 +147,10 @@ Title: What the evaluator should notice
 Subtitle: The demo is built to prove speed to value, not production completeness.
 
 Demo actions:
-- Click Train Local Baselines to show peer-group learning.
-- Click Share Federated Summary to show zero raw records shared.
-- Select a high-risk claim and explain graph path plus reason chain.
-- Export an audit packet to show investigator handoff thinking.
+- Train Local Baselines: peer-group learning.
+- Share Federated Summary: zero raw records shared.
+- Select high-risk claim: graph path plus evidence card.
+- Export Evidence Card: reviewer handoff.
 
 Footer source line: Asset: screenshot from the included Claim Integrity Radar POC.
 
@@ -167,10 +167,10 @@ Subtitle: Constrain the domain, measure lift, and decide whether to invest in a 
 Pilot plan:
 - Weeks 1-2 | Pick one domain | Wound care, DME, high-volume labs, or behavioral health.
 - Weeks 3-6 | Build graph features | Entity resolution, peer baselines, time windows, and policy hooks.
-- Weeks 7-10 | Compare to current review | Precision, recall proxy, auditor agreement, provider abrasion, and turnaround.
+- Weeks 7-10 | Shadow-mode comparison | Precision, recall proxy, reviewer agreement, provider abrasion, and turnaround.
 - Weeks 11-12 | Investment decision | Scale, pivot, or stop based on lift and governance readiness.
 
-Closing line: Close with the thesis: no score without a story.
+Closing line: Close with the thesis: no score without a story, and the cockpit supports reviewers rather than replacing them.
 
 Visual guide: Four-row timeline table with color-coded week labels and a bold final line near the bottom.
 

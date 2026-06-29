@@ -23,11 +23,11 @@ Target length: 5 to 7 minutes.
    - Click `Train Local Baselines`.
    - Click `Share Federated Summary`.
    - Select a high-risk claim in the review queue.
-   - Explain the graph path and evidence chain.
-   - Click `Export Audit Packet`.
+   - Explain the graph path and evidence card.
+   - Click `Export Evidence Card`.
 
 4. Close, 20 seconds
-   - "The core thesis is no score without a story. Cotiviti can use privacy-preserving claim graphs to broaden pattern learning while giving auditors defensible reasons for every lead."
+   - "The core thesis is no score without a story. Cotiviti can use privacy-preserving claim graphs as a reviewer cockpit that broadens pattern learning while giving auditors defensible reasons for every lead."
 
 ## GitHub repository checklist
 

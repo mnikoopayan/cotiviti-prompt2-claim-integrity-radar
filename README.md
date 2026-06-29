@@ -8,6 +8,8 @@ Federated Claim-Graph Intelligence for Payment Integrity
 
 This submission focuses on prompt 2: clinical decision making and pattern recognition in health care. The core idea is to model payment integrity as an explainable claims graph rather than a flat claim row. The report and proof of concept show how classification, inference, clustering, and time-series anomaly detection can help prioritize payment review while preserving privacy and keeping auditors in the loop.
 
+The recommended product posture is a reviewer cockpit, not autonomous payment denial. Every high-risk lead should arrive as an evidence card with peer context, graph path, policy cue, uncertainty, and a human review action.
+
 ## Repository Contents
 
 - `Cotiviti_Prompt2_Report_Mohammad_Saleh_Nikoopayan_Tak.docx`
@@ -38,12 +40,12 @@ Recommended flow:
 1. Click `Train Local Baselines`.
 2. Click `Share Federated Summary`.
 3. Select a high-risk claim from the review queue.
-4. Explain the graph path and evidence chain.
-5. Click `Export Audit Packet`.
+4. Explain the graph path and evidence card.
+5. Click `Export Evidence Card`.
 
 ## Strategic Thesis
 
-Cotiviti can use privacy-preserving claim graphs to detect suspicious payment patterns earlier, explain each lead to auditors, and share cross-payer signal without sharing raw claims.
+Cotiviti can turn privacy-preserving claim graphs into a reviewer cockpit that detects suspicious payment patterns earlier, produces evidence cards for every lead, and broadens cross-payer learning without exposing raw claims.
 
 The key design principle is:
 

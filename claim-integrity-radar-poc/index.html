@@ -596,15 +596,15 @@
   <main class="app">
     <header class="topbar">
       <div>
-        <div class="eyebrow">Prompt 2 POC | Payment integrity graph intelligence</div>
+        <div class="eyebrow">Prompt 2 POC | Reviewer cockpit for payment integrity</div>
         <h1>Claim Integrity Radar</h1>
-        <p class="subtitle">A synthetic claims graph demonstrator that trains local payer baselines, shares only aggregate peer signal, and turns anomaly scores into an auditor-ready evidence chain.</p>
+        <p class="subtitle">A synthetic claims graph reviewer cockpit that trains local payer baselines, shares only aggregate peer signal, and turns anomaly scores into human-readable evidence cards.</p>
       </div>
       <div class="actions" aria-label="Demo actions">
         <button class="btn" id="regenerateBtn">Generate New Run</button>
         <button class="btn" id="trainBtn">Train Local Baselines</button>
         <button class="btn" id="federateBtn">Share Federated Summary</button>
-        <button class="btn primary" id="exportBtn">Export Audit Packet</button>
+        <button class="btn primary" id="exportBtn">Export Evidence Card</button>
       </div>
     </header>
 
@@ -640,7 +640,7 @@
           <input type="checkbox" id="privacyToggle" checked>
           <span>Suppress raw member identifiers in federated view</span>
         </label>
-        <p class="sidebar-note">The demo uses synthetic data only. Scores are explainable heuristics, designed to make first principles visible during a short presentation.</p>
+        <p class="sidebar-note">The demo uses synthetic data only. Scores are explainable heuristics for human review and do not approve, deny, or alter payment.</p>
       </aside>
 
       <section class="main">
@@ -684,8 +684,8 @@
           <article class="panel detail-panel">
             <div class="panel-heading">
               <div>
-                <h2>Evidence Chain</h2>
-                <p>Each score is translated into a short investigator handoff.</p>
+                <h2>Evidence Card</h2>
+                <p>Each score is translated into a short reviewer handoff with guardrails.</p>
               </div>
               <span class="status-pill ready" id="actionStatus">Review</span>
             </div>
@@ -704,7 +704,7 @@
             <div class="panel-heading">
               <div>
                 <h2>Review Queue</h2>
-                <p>Click a claim to inspect its graph and reason trace.</p>
+                <p>Click a claim to inspect its graph and evidence card.</p>
               </div>
               <span class="status-pill" id="queueStatus">Threshold 70</span>
             </div>
@@ -723,7 +723,7 @@
               <div class="flow-step"><b>1. Local</b><span>Train baselines by client, code, provider specialty, and week.</span></div>
               <div class="flow-step"><b>2. Summarize</b><span>Convert raw claims into means, percentiles, and drift signals.</span></div>
               <div class="flow-step"><b>3. Combine</b><span>Merge aggregate peer signal across simulated clients.</span></div>
-              <div class="flow-step"><b>4. Explain</b><span>Return graph paths and actions, not opaque alerts.</span></div>
+              <div class="flow-step"><b>4. Explain</b><span>Return evidence cards and actions, not opaque alerts.</span></div>
             </div>
             <div class="mini-bars" id="federatedBars"></div>
           </article>
@@ -1062,13 +1062,18 @@
       els.detailAction.textContent = claim.action;
       els.actionStatus.textContent = claim.action;
       els.evidenceList.innerHTML = "";
+      const reasonSteps = claim.reasons.slice(0, 3);
+      if (claim.reasons.length > 3) {
+        reasonSteps.push("Additional signals are retained in the exported evidence card.");
+      }
       const chain = [
         "Start with " + claim.id + ": " + claim.procedure + ", " + claim.units + " units, " + money(claim.amount) + ".",
         "Compare against local baseline for " + claim.specialty + " and CPT " + claim.code + ".",
-        ...claim.reasons,
-        "Route to action: " + claim.action + "."
+        ...reasonSteps,
+        "Route to action: " + claim.action + ".",
+        "Governance guardrail: human review only. No approval, denial, payment, or coverage decision is automated."
       ];
-      chain.slice(0, 6).forEach((item, index) => {
+      chain.forEach((item, index) => {
         const li = document.createElement("li");
         li.innerHTML = "<span class=\"step-num\">" + (index + 1) + "</span><span>" + item + "</span>";
         els.evidenceList.appendChild(li);
@@ -1191,17 +1196,23 @@
       window.setTimeout(() => els.toast.classList.remove("show"), 2400);
     }
 
-    function exportAuditPacket() {
+    function exportEvidenceCard() {
       const selected = claims.find(c => c.id === selectedClaimId);
       if (!selected) return;
       const packet = {
         exportedAt: new Date().toISOString(),
         author: "Mohammad Saleh Nikoopayan Tak",
-        prototype: "Claim Integrity Radar",
+        prototype: "Claim Integrity Radar reviewer cockpit",
         claim: selected.id,
         score: selected.risk,
         action: selected.action,
         evidence: selected.reasons,
+        guardrails: [
+          "Synthetic data only",
+          "Human review only",
+          "No approval, denial, payment, or coverage decision is automated",
+          "Federated summary shares aggregate signal only"
+        ],
         graph: {
           provider: selected.providerId,
           member: els.privacyToggle.checked ? "masked" : selected.memberId,
@@ -1216,10 +1227,10 @@
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = selected.id + "-audit-packet.json";
+      a.download = selected.id + "-evidence-card.json";
       a.click();
       URL.revokeObjectURL(url);
-      showToast("Audit packet exported for " + selected.id + ".");
+      showToast("Evidence card exported for " + selected.id + ".");
     }
 
     function initClientSelect() {
@@ -1256,7 +1267,7 @@
         render();
         showToast("Federated summary shared. Raw claim and member records remain local.");
       });
-      els.exportBtn.addEventListener("click", exportAuditPacket);
+      els.exportBtn.addEventListener("click", exportEvidenceCard);
       els.clientSelect.addEventListener("change", () => {
         selectedClaimId = null;
         render();
