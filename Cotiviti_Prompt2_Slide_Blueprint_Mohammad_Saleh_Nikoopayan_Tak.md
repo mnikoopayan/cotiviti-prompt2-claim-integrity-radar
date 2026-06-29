@@ -154,7 +154,7 @@ Demo actions:
 
 Footer source line: Asset: screenshot from the included Claim Integrity Radar POC.
 
-Visual guide: Left panel with four demo actions. Right side should use a screenshot of the working POC dashboard.
+Visual guide: Left panel with four demo actions. Right side uses a screenshot of the working POC dashboard. If you refresh the screenshot, capture the evidence card with its human review only banner visible.
 
 Presenter guidance: During video recording, use this slide as the bridge before screensharing the POC.
 

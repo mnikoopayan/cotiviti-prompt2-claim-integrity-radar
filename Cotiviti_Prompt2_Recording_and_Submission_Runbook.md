@@ -19,11 +19,11 @@ Target length: 5 to 7 minutes.
    - Slide 9: close with the 90-day pilot recommendation.
 
 3. POC screenshare, 90 seconds
-   - Open `claim-integrity-radar-poc/index.html`.
+   - Open the live demo, or open `claim-integrity-radar-poc/index.html` locally. The header shows a guided four-step strip that mirrors this flow.
    - Click `Train Local Baselines`.
    - Click `Share Federated Summary`.
    - Select a high-risk claim in the review queue.
-   - Explain the graph path and evidence card.
+   - Explain the graph path, then point to the human review only banner on the evidence card.
    - Click `Export Evidence Card`.
 
 4. Close, 20 seconds

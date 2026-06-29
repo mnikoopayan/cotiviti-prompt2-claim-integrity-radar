@@ -46,7 +46,7 @@
     .app {
       min-height: 100vh;
       display: grid;
-      grid-template-rows: auto 1fr;
+      grid-template-rows: auto auto 1fr;
     }
 
     .topbar {
@@ -555,6 +555,80 @@
       opacity: 1;
     }
 
+    .guided {
+      background: var(--panel);
+      border-bottom: 1px solid var(--line);
+      padding: 11px 24px;
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .guided-label {
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .guided-steps {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .guided-steps li {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+      background: var(--soft);
+      border-radius: 999px;
+      padding: 5px 12px 5px 6px;
+    }
+
+    .guided-steps li b {
+      display: inline-grid;
+      place-items: center;
+      width: 19px;
+      height: 19px;
+      border-radius: 999px;
+      background: var(--teal);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .guardrail {
+      display: flex;
+      gap: 9px;
+      align-items: center;
+      background: var(--teal-soft);
+      color: #0b5b54;
+      border: 1px solid #bfe3dd;
+      border-radius: var(--radius);
+      padding: 9px 11px;
+      font-size: 12.5px;
+      font-weight: 700;
+      line-height: 1.35;
+      margin-bottom: 14px;
+    }
+
+    .guardrail-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: var(--teal);
+      flex: none;
+    }
+
     @media (max-width: 1100px) {
       .layout,
       .workbench,
@@ -568,6 +642,10 @@
     }
 
     @media (max-width: 760px) {
+      .guided {
+        padding: 11px 16px;
+      }
+
       .topbar {
         grid-template-columns: 1fr;
       }
@@ -607,6 +685,16 @@
         <button class="btn primary" id="exportBtn">Export Evidence Card</button>
       </div>
     </header>
+
+    <nav class="guided" aria-label="Guided demo steps">
+      <span class="guided-label">Guided demo</span>
+      <ol class="guided-steps">
+        <li><b>1</b> Train local baselines</li>
+        <li><b>2</b> Share federated summary</li>
+        <li><b>3</b> Select a flagged claim</li>
+        <li><b>4</b> Export its evidence card</li>
+      </ol>
+    </nav>
 
     <section class="layout">
       <aside class="panel sidebar">
@@ -689,6 +777,7 @@
               </div>
               <span class="status-pill ready" id="actionStatus">Review</span>
             </div>
+            <div class="guardrail"><span class="guardrail-dot" aria-hidden="true"></span>Human review only. No approval, denial, payment, or coverage decision is automated.</div>
             <div class="detail-grid">
               <div class="fact"><b>Claim</b><span id="detailClaim">-</span></div>
               <div class="fact"><b>Provider</b><span id="detailProvider">-</span></div>
@@ -731,7 +820,7 @@
       </section>
     </section>
   </main>
-  <div class="toast" id="toast"></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script>
     const clients = ["Apex Health", "BridgeCare", "Canyon Mutual"];
@@ -1020,7 +1109,7 @@
       const top = all.slice().sort((a, b) => b.risk - a.risk)[0];
       els.metricClaims.textContent = all.length.toLocaleString();
       els.metricFlagged.textContent = flagged.length.toLocaleString();
-      els.metricShared.textContent = federated ? "0" : "0";
+      els.metricShared.textContent = "0";
       els.metricTop.textContent = top ? top.risk : "0";
       els.metricTopFoot.textContent = top ? top.id + " | " + top.domain : "No claim selected";
       els.queueStatus.textContent = "Threshold " + els.thresholdInput.value;
