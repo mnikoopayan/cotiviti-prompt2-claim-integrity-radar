@@ -33,8 +33,7 @@ Recommended walkthrough, about ninety seconds:
 - `Cotiviti_Prompt2_Report_Mohammad_Saleh_Nikoopayan_Tak.docx`, the two-page written report with a third-page bibliography.
 - `Cotiviti_Prompt2_Presentation_Mohammad_Saleh_Nikoopayan_Tak.pptx`, an executive overview of the report and proof of concept.
 - `claim-integrity-radar-poc/`, the browser-based Claim Integrity Radar prototype. No install step is required.
-- `Cotiviti_Prompt2_Recording_and_Submission_Runbook.md`, the suggested video structure, demo flow, and submission checklist.
 
 ## Strategic thesis
 
-Cotiviti can turn privacy-preserving claim graphs into a reviewer cockpit that surfaces suspicious payment patterns earlier, produces an evidence card for every lead, and broadens cross-payer learning without exposing raw claims. The recorded video presentation follows the structure in the runbook.
+Cotiviti can turn privacy-preserving claim graphs into a reviewer cockpit that surfaces suspicious payment patterns earlier, produces an evidence card for every lead, and broadens cross-payer learning without exposing raw claims.
