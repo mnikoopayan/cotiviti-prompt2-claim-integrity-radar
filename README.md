@@ -33,7 +33,6 @@ Recommended walkthrough, about ninety seconds:
 - `Cotiviti_Prompt2_Report_Mohammad_Saleh_Nikoopayan_Tak.docx`, the two-page written report with a third-page bibliography.
 - `Cotiviti_Prompt2_Presentation_Mohammad_Saleh_Nikoopayan_Tak.pptx`, an executive overview of the report and proof of concept.
 - `claim-integrity-radar-poc/`, the browser-based Claim Integrity Radar prototype. No install step is required.
-- `Cotiviti_Prompt2_Slide_Blueprint_Mohammad_Saleh_Nikoopayan_Tak.md`, exact slide text and visual guidance for each slide.
 - `Cotiviti_Prompt2_Recording_and_Submission_Runbook.md`, the suggested video structure, demo flow, and submission checklist.
 
 ## Strategic thesis

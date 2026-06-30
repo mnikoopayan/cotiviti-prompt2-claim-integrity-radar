@@ -37,7 +37,6 @@ Include these files or folders:
 - `Cotiviti_Prompt2_Presentation_Mohammad_Saleh_Nikoopayan_Tak.pptx`
 - `claim-integrity-radar-poc/`
 - Recorded MP4 video
-- Optional: `Cotiviti_Prompt2_Slide_Blueprint_Mohammad_Saleh_Nikoopayan_Tak.md`
 
 ## Email subject
 
